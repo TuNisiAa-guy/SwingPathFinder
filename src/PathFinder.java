@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class PathFinder {
+    private boolean wasPathFound = false;
     private final int chartWidth;
     private final int chartHeight;
     private HashSet<Node> open = new HashSet<>();
@@ -61,18 +62,6 @@ public class PathFinder {
             this.posX = posX;
             this.posY = posY;
         }
-        private Node[] getNeighbors(){
-            ArrayList<Node> neighbors = new ArrayList<>();
-            for (int i = -1; i <= 1; i++) {
-                for (int j = -1; j <= 1; j++) {
-                    if(i == 0 && j == 0){
-                        continue;
-                    }
-                    neighbors.add(getNode(j, i));
-                }
-            }
-            return neighbors.toArray(new Node[neighbors.size()]);
-        }
 
         private Node[] reconstructPath(Node n){
             ArrayList<Node> path = new ArrayList<>();
@@ -94,17 +83,19 @@ public class PathFinder {
             }
             return distance;
         }
-        private void expand(Node parent){
-            Node[] neighbors = this.getNeighbors();
-            Node closestNeighbor = closestNode(neighbors);
+        private int expand(Node parent){
+            if(this.equals(finish)){
+                wasPathFound = true;
+            }
+            Node closest = closestNode();
             this.parent = parent;
             open.remove(this);
             closed.add(this);
         }
-        private Node closestNode(Node[] nodes){
+        private Node closestNode(){
             int minDistance = 0;
             Node closest = null;
-            for(Node node : nodes){
+            for(Node node : open){
                 if(minDistance > getPathLength(reconstructPath(node)) && open.contains(node)){
                     minDistance = getPathLength(reconstructPath(node));
                     closest = node;
