@@ -85,7 +85,7 @@ public class PathFinder {
             }
             return distance;
         }
-        private int expand(Node parent){
+        private void expand(Node parent){
             if(this.equals(finish)){
                 wasPathFound = true;
             }
